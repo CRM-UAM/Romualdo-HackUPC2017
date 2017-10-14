@@ -1,8 +1,8 @@
 import numpy as np
 import time
 import cv2
-from skimage.measure import compare_ssim
-import imutils
+#from skimage.measure import compare_ssim
+#import imutils
 import sys
 from voz import *
 
@@ -15,12 +15,12 @@ class Coordenadas:
     self.y = y
 
 class Persona:
-  def __init__(self, name, picture)
+  def __init__(self, name, picture):
     self.name = name
     self.picture = picture
 
 
-def reconocer():
+def reconocer(controller):
   #Espacio de coordenadas
   coordenadas = []
   
@@ -31,6 +31,8 @@ def reconocer():
   
   #Frames antiguos
   antiguo = None
+
+  loadDataBase(personas_abandono)
 
   #Cargamos el archivo cascade
   rostroCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
@@ -54,7 +56,6 @@ def reconocer():
       
       if (len(personas_actuales) == 0):
         if (bloqueo(antiguo, gray)):
-	    print("hello")
 	    antiguo = gray
 
       rostros = rostroCascade.detectMultiScale(
@@ -106,60 +107,80 @@ def actualizarPosicion(x,y, coordenadas, n_rostros):
       
   return coordenadas.index(coord)
 
-def actualizarPersona(rostros, personas_actuales, personas_abandono):
-  auxiliar=None
+
+def nuevoRostro(rostros, personas_actuales,controller):
+  auxiliar=set()
+  for r in rostro:
+    for p_a in personas_actuales:
+      if (mismaPersona(p_a, r) == True):
+	auxiliar.pop(r)
+	break
+      else:
+	auxiliar.add(r)
+  aux = list(auxiliar)
+  personas_actuales.append(aux)
+  controller.someoneLooksAtMe(aux)
+
+  
+
+
+def actualizarPersona(rostros, personas_actuales, personas_abandono,controller):
+  auxiliar=set()
   for p_a in personas_actuales:
     for r in rostros:
       if (mismaPersona(p_a, r) == True):
-	auxiliar=None
+	auxiliar.pop(p_a)
 	break
       else:
-	auxiliar = p_a
-    persona_saliendo = personas_actuales.pop(personas_actuales.index(auxiliar))
-    personas_abandono.append(persona_saliendo)
+	auxiliar.add(p_a)
+
+  for aux in auxiliar:
+    personas_actuales.pop(personas_actuales.index(aux))
+  aux=list(auxiliar)
+  personas_abandono.extend(aux)
+  controller.someoneLeaves(aux)
     
-def bloqueo(antiguo, frame):
+def bloqueo(antiguo, frame, controller):
   
   if(antiguo==None):
     return
-  texto="\"Hey!Hey!Over here!\""
   # Resta absoluta
   resta = cv2.absdiff(antiguo, frame)
-  print resta.sum()
+  #print resta.sum()
   if(resta.sum() > UMBRAL):
-    romualdo_says(texto)
-    return 1
+    controller.movementDetected()
+    return
  
-  return 0
+  return
   
 def mismaPersona(firstPerson, secondPerson):
-	# compute the Structural Similarity Index (SSIM) between the two
-	# images, ensuring that the difference image is returned
-	(score, diff) = compare_ssim(firstPerson, secondPerson, full=True)
-	diff = (diff * 255).astype("uint8")
+  # compute the Structural Similarity Index (SSIM) between the two
+  # images, ensuring that the difference image is returned
+  (score, diff) = compare_ssim(firstPerson, secondPerson, full=True)
+  diff = (diff * 255).astype("uint8")
 
-	# threshold the difference image, followed by finding contours to
-	# obtain the regions of the two input images that differ
-	thresh = cv2.threshold(diff, 0, 255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-	cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-	cnts = cnts[0] if imutils.is_cv2() else cnts[1]
+  # threshold the difference image, followed by finding contours to
+  # obtain the regions of the two input images that differ
+  thresh = cv2.threshold(diff, 0, 255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+  cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+  cnts = cnts[0] if imutils.is_cv2() else cnts[1]
 
-	# loop over the contours
-	errorArea=0
-	for c in cnts:
-		# compute the bounding box of the contour and then draw the
-		# bounding box on both input images to represent where the two
-		# images differ
-		(x, y, w, h) = cv2.boundingRect(c)
-		# cv2.rectangle(imageA, (x, y), (x + w, y + h), (0, 0, 255), 2)
-		# cv2.rectangle(imageB, (x, y), (x + w, y + h), (0, 0, 255), 2)
-		errorArea+=w*h
+  # loop over the contours
+  errorArea=0
+  for c in cnts:
+    # compute the bounding box of the contour and then draw the
+    # bounding box on both input images to represent where the two
+    # images differ
+    (x, y, w, h) = cv2.boundingRect(c)
+    # cv2.rectangle(imageA, (x, y), (x + w, y + h), (0, 0, 255), 2)
+    # cv2.rectangle(imageB, (x, y), (x + w, y + h), (0, 0, 255), 2)
+    errorArea+=w*h
 
-	if errorArea<0.3*cv2.findContours(firstPerson.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE):
-		return True
-	else:
-		return False
-	
+    if errorArea<0.3*cv2.findContours(firstPerson.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE):
+      return True
+    else:
+      return False
+
 
 def newUsersDatabase ():
     f=open('database.txt','w')
@@ -169,7 +190,8 @@ def newUsersDatabase ():
 def newUser (name, picture):
     return Persona(name,picture)
 
-if __name__ == "__main__":
+
+def loadDataBase(personas_abandono):
     # Check possible users database
     try:
         database=open('database.txt','r')
@@ -177,7 +199,7 @@ if __name__ == "__main__":
         cont=0
         for line in database:
             data=line.split(' ')
-            userlist.append(newUser(data[0],data[1]))
+            personas_abandono.append(newUser(data[0],data[1]))
             cont+=1
             
         print('Load users: %d' % cont)
@@ -187,6 +209,8 @@ if __name__ == "__main__":
         print('No database, creating...')
         newUsersDatabase()
 
+
+if __name__ == "__main__":
     reconocer()
 
 
