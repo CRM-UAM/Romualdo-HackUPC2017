@@ -65,11 +65,11 @@ def reconocer():
   exit()
 
 
-def actualizarPosicion(x,y, coordenadas, personas, n_rostros):
+def actualizarPosicion(x,y, coordenadas, n_rostros):
   for coord in coordenadas:
     r1 = x - coord.x
     r2 = y - coord.y
-    if ( abs(r1) < VALOR_UMBRAL and abs(r2) < VALOR_UMBRAL )):
+    if ( abs(r1) < VALOR_UMBRAL and abs(r2) < VALOR_UMBRAL ):
       coord.x=x
       coord.y=y
       return coordenadas.index(coord)
@@ -81,8 +81,14 @@ def actualizarPosicion(x,y, coordenadas, personas, n_rostros):
   coordenadas.append(coord)
       
   return coordenadas.index(coord)
+
+def actualizarPersona():
+  pass
   
-def mismaPersona(old_persona, new_persona)
+def personaSeVa():
+  pass
+  
+def mismaPersona(old_persona, new_persona):
   return True
 
 if __name__ == "__main__":
