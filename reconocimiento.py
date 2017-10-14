@@ -2,6 +2,10 @@
 import numpy as np
 import time
 import cv2
+from skimage.measure import compare_ssim
+import argparse
+import imutils
+
 
 VALOR_UMBRAL=50
 
