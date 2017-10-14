@@ -18,7 +18,9 @@ def reconocer():
   coordenadas = []
   
   #Frames de personas actuales
-  personas = []
+  personas_actuales = []
+  
+  personas_abandono = []
   
   #Cargamos el archivo cascade
   rostroCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
@@ -32,7 +34,6 @@ def reconocer():
       # Capture frame-by-frame
       ret, frame = cap.read()
       
-      personas.append(frame)
       # Our operations on the frame come here
       gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
       
@@ -45,6 +46,8 @@ def reconocer():
       )
       i=0
       n_rostros = len(rostros)
+      actualizarPersona(rostros, personas_actuales, personas_abandono)
+      
       for (x, y, w, h) in rostros:
 	
 	i = actualizarPosicion(x, y, coordenadas, n_rostros)
@@ -54,7 +57,7 @@ def reconocer():
 	cv2.imshow('Tu face'+str(i),frame[y:y+h, x:x+w])
 	
       # Display the resulting frame
-      cv2.imshow('Rostros',frame)
+      #cv2.imshow('Rostros',frame)
       if cv2.waitKey(1) & 0xFF == ord('q'):
 	  break
 
@@ -82,11 +85,19 @@ def actualizarPosicion(x,y, coordenadas, n_rostros):
       
   return coordenadas.index(coord)
 
-def actualizarPersona():
-  pass
+def actualizarPersona(rostros, personas_actuales, personas_abandono):
+  auxiliar=None
+  for p_a in personas_actuales:
+    for r in rostros:
+      if (mismaPersona(p_a, r) == True):
+	auxiliar=None
+	break
+      else:
+	auxiliar = p_a
+    persona_saliendo = personas_actuales.pop(personas_actuales.index(auxiliar))
+    personas_abandono.append(persona_saliendo)
+    
   
-def personaSeVa():
-  pass
   
 def mismaPersona(old_persona, new_persona):
   return True
