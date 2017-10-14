@@ -1,9 +1,21 @@
-def veoMovimiento():
+import reconocimiento
+import servo_test
+import voz
+import mic
+
+class Controller:
+
+peopleOnCamera = []
+peopleAll = []
+
+def movementDetected():
     #TODO:PACOOOOOO
 
-def personaMeAtiende():
+def someoneLooksAtMe(picture):
     #TODO: comprobar si la conocemos
-    #Saludar y escuchar
+    #Saludar
+    #Anadir a activos
 
-def personaSeVa(persona):
+
+def someoneLeaves(picture):
     #TODO: si la conocemos, adios Paco!
