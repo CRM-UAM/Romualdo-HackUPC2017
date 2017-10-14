@@ -13,12 +13,12 @@ def decir(texto):
 
 
 def romualdo_says(texto):
-  tokens = re.split(';|,|\.|:', texto)
+  tokens = re.split('(?<=[;,.:!?])\s*', texto)
   for t in tokens:
     #print t
     decir(t)
   
-romualdo_says("Hello, how are you? I love chicken; Oh my gosh!. look at that bunny!")
+#romualdo_says("Hello, how are you? I love chicken; Oh my gosh! look at that bunny!")
 
 
 
