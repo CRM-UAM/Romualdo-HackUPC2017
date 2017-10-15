@@ -1,7 +1,6 @@
 import reconocimiento
 import romualdo_says
 import servo_test
-import voz
 import mic
 
 class Controller:
@@ -14,10 +13,12 @@ class Controller:
     servo_test.servo_angle(1)
 
   def someoneLooksAtMe(person):
+    print('me miran')
     #TODO: comprobar si la conocemos
     #Saludar
     #Anadir a activos
 
 
   def someoneLeaves(person):
+    print('se piran')
     #TODO: si la conocemos, adios Paco!
