@@ -1,8 +1,6 @@
 import numpy as np
 import time
 import cv2
-#from skimage.measure import compare_ssim
-#import imutils
 import sys
 from voz import *
 
@@ -20,14 +18,9 @@ class Persona:
     self.picture = picture
 
 
-def reconocer(controller):
+def reconocer(controller, personas_actuales=[], personas_abandono=[]):
   #Espacio de coordenadas
   coordenadas = []
-  
-  #Frames de personas actuales
-  personas_actuales = []
-  
-  personas_abandono = []
   
   #Frames antiguos
   antiguo = None
@@ -68,7 +61,8 @@ def reconocer(controller):
 
       i=0
       n_rostros = len(rostros)
-      actualizarPersona(rostros, personas_actuales, personas_abandono)
+      actualizarRostro(rostros,personas_actuales,controller)
+      actualizarPersona(rostros, personas_actuales, personas_abandono, controller)
       
       for (x, y, w, h) in rostros:
 	i = actualizarPosicion(x, y, coordenadas, n_rostros)
@@ -111,12 +105,13 @@ def actualizarPosicion(x,y, coordenadas, n_rostros):
 def nuevoRostro(rostros, personas_actuales,controller):
   auxiliar=set()
   for r in rostro:
+    persona_rostro = Persone(None, r)
     for p_a in personas_actuales:
-      if (mismaPersona(p_a, r) == True):
-	auxiliar.pop(r)
+      if (mismaPersona(p_a, persona_rostro) == True):
+	auxiliar.pop(persona_rostro)
 	break
       else:
-	auxiliar.add(r)
+	auxiliar.add(Persona(None,r))
   aux = list(auxiliar)
   personas_actuales.append(aux)
   controller.someoneLooksAtMe(aux)
@@ -156,8 +151,7 @@ def bloqueo(antiguo, frame, controller):
 def mismaPersona(firstPerson, secondPerson):
   # compute the Structural Similarity Index (SSIM) between the two
   # images, ensuring that the difference image is returned
-  (score, diff) = compare_ssim(firstPerson, secondPerson, full=True)
-  diff = (diff * 255).astype("uint8")
+  diff = absdiff(firstPerson, secondPerson)
 
   # threshold the difference image, followed by finding contours to
   # obtain the regions of the two input images that differ
