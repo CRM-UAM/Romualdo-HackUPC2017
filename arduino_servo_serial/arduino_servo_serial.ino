@@ -8,10 +8,21 @@ void setup() {
   myservo.attach(8);
 }
 
+int pos = 0;
+
 void loop() {
-  int pos = Serial.parseInt();
-  if(pos > 0) {
-    if(pos > 170) pos = 170;
-    myservo.write(pos);
+  int target = Serial.parseInt();
+  if(target > 0) {
+    if(target > 170) target = 170;
+    while(pos < target) {
+      pos++;
+      myservo.write(pos);
+      //delay(3);
+    }
+    while(pos > target) {
+      pos--;
+      myservo.write(pos);
+      //delay(3);
+    }
   }
 }
