@@ -11,7 +11,7 @@ class Controller:
   peopleAll = []
 
   def init():   
-    loadDataBase(peopleAll)
+    peopleAll=loadDataBase()
     reconocimiento.reconocer(self, peopleOnCamera, peopleAll)
 
   def movementDetected():
@@ -31,31 +31,23 @@ class Controller:
 
 
 def newUsersDatabase ():
-    f=open('database.txt','w')
-    print('New database created!')
-    f.close()
+    peopleAll.append(peopleOnCamera) # Add all recognize people
+    pickle.dump(peopleAll,open('save.p','wb'))
 
 def newUser (name, picture):
     return Persona(name,picture)
 
 
-def loadDataBase(personas_abandono):
+def loadDataBase:
     # Check possible users database
     try:
-        database=open('database.txt','r')
-
-        cont=0
-        for line in database:
-            data=line.split(' ')
-            personas_abandono.append(newUser(data[0],data[1]))
-            cont+=1
+        database=pickle.load(open('save.p','rb'))
             
-        print('Load users: %d' % cont)
-        database.close()
+        print('Users loaded: %d' % database.length())
+        return database
 
     except IOError:
-        print('No database, creating...')
-        newUsersDatabase()
+        print('No database!')
 
 
 if __name__ == "__main__":
