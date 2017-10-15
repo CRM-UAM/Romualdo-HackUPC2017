@@ -25,7 +25,7 @@ def reconocer(controller, personas_actuales=[], personas_abandono=[]):
   #Frames antiguos
   antiguo = None
 
-  loadDataBase(personas_abandono)
+  #loadDataBase(personas_abandono)
 
   #Cargamos el archivo cascade
   rostroCascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
