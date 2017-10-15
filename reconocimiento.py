@@ -107,7 +107,7 @@ def nuevoRostro(rostros, personas_actuales,controller):
   for r in rostro:
     persona_rostro = Persone(None, r)
     for p_a in personas_actuales:
-      if (mismaPersona(p_a, persona_rostro) == True):
+      if (mismaPersona(p_a.picture, r) == True):
 	auxiliar.pop(persona_rostro)
 	break
       else:
@@ -123,7 +123,7 @@ def actualizarPersona(rostros, personas_actuales, personas_abandono,controller):
   auxiliar=set()
   for p_a in personas_actuales:
     for r in rostros:
-      if (mismaPersona(p_a, r) == True):
+      if (mismaPersona(p_a.picture, r) == True):
 	auxiliar.pop(p_a)
 	break
       else:
