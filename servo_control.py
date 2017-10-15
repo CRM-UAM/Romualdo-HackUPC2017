@@ -38,7 +38,7 @@ handPos = 0
 def hand_random():
     global handPos
     handPos += random.choice([-25,-20,-15,15,20,25])
-    if handPos > 120: handPos = 120
+    if handPos > 100: handPos = 100
     if handPos < 0: handPos = 0
     servo_angle(handPos)
 

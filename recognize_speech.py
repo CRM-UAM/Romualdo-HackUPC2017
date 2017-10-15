@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import speech_recognition as sr
-from api_key import API_KEY
+from api_key import API_KEY_BING
 
 # obtain audio from the microphone
 r = sr.Recognizer()
@@ -19,7 +19,7 @@ def recognize_speech():
     print("Processing speech...")
     # recognize speech using Bing Voice Recognition
     try:
-        text = r.recognize_bing(audio, key=API_KEY)
+        text = r.recognize_bing(audio, key=API_KEY_BING)
         return text
     except sr.UnknownValueError:
         return "ERROR NO SPEECH DETECTED"
