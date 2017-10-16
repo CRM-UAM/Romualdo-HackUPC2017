@@ -6,6 +6,8 @@ from servo_control import *
 from recognize_speech import *
 from romualdo_says import *
 from api_key import API_KEY_CHATBOT
+import webbrowser
+
 
 #from dialogflow import Dialogflow
 #dialogflow = Dialogflow(client_access_token=API_KEY_CHATBOT)
@@ -42,7 +44,6 @@ def ask_question(question, ignore_silence=False):
     return text
 
 
-'''
 
 romualdo_says("Hello!")
 
@@ -91,8 +92,9 @@ if reply:
 
 
 say(["So.","Well.","Hmm","Are you single?","Actually, I woudn't mind a date with you","Would you go on a date with me? I'll bring pizza."])
-'''
 
+
+n = 0
 while(True):
     say(["Say something.","What do you think of the weather?","So how are you?","You look beautiful today","Where are you from?","Do you believe in love after love?","I like chicken","I want to hear your beautiful voice again","Who lives in a pineapple under the sea?","Help me, I'm bored!","I ran out of words for you","Sorry I don't talk, you are too beautiful","Want a slice from my pizza box? Hahaha"])
     text = ask_question("",ignore_silence=True)
@@ -102,5 +104,11 @@ while(True):
         print(reply)
         reply = str(reply)
         romualdo_says(reply)
+    n += 1
+    if n > 2: break
+
+
+say(["This is the end of the demo! Thanks for playing. Enjoy some nice music!"])
+webbrowser.open("http://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
 

@@ -2,15 +2,20 @@ import time
 import serial
 import random
 
-ser = serial.Serial('/dev/ttyUSB0', 115200)
-time.sleep(2) # wait for servo to initialize
+ser = None
+try:
+    ser = serial.Serial('/dev/ttyUSB0', 115200)
+    time.sleep(2) # wait for servo to initialize
+except:
+    ser = None
+    print("Servo not initialized")
 
 def servo_angle(degrees):
     degrees = int(degrees)
     if degrees == 0: degrees = 1 # arduino parseInt() limitations don't allow to send 0
-    ser.write(str(degrees)+"\n")
-    ser.flush()
-    print(degrees)
+    if ser:
+        ser.write(str(degrees)+"\n")
+        ser.flush()
 
 servo_angle(90)
 
