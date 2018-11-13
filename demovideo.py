@@ -27,8 +27,8 @@ def reconocer():
 
   cap = cv2.VideoCapture(0)
 
-  cap.set(3,640)
-  cap.set(4,480)
+  cap.set(3,320)
+  cap.set(4,240)
 
   while(True):
       # Capture frame-by-frame
@@ -44,25 +44,11 @@ def reconocer():
 	      minSize= (30,30),
 	      flags = cv2.CASCADE_SCALE_IMAGE
       )
-      i=0
-      n_rostros = len(rostros)
-      actualizarPersona(rostros, personas_actuales, personas_abandono)
-      b=1
       for (x, y, w, h) in rostros:
-	
-	        i = actualizarPosicion(x, y, coordenadas, n_rostros)
-	        if (i == None):
-	          continue
-	        #cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-	        myface = frame[y:y+h, x:x+w]
-	        myface = cv2.resize(myface, (320, 240)) 
-	        title = 'Tu face'+str(i%4)
-	        cv2.imshow(title,myface)
-	        cv2.moveWindow(title, 30+(i%4)*330, 20*(b%4))
-	        b+=1
+	        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 	
       # Display the resulting frame
-      #cv2.imshow('Rostros',frame)
+      cv2.imshow('Rostros',frame)
       if cv2.waitKey(1) & 0xFF == ord('q'):
 	  break
 

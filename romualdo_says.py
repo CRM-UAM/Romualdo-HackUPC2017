@@ -1,19 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from dialogflow import Dialogflow
-
-import random
 import subprocess
 import re
 
-random.seed()
-
 def decir(texto):
-  tones=[9.19, 20.21, 32.6, 39.38, 54.1, 70.62, 89.19]
-  velocities=[110,120,130]
   # 'setsid -w' removes ALL output from the espeak program
-  subprocess.check_output(['setsid', '-w', 'espeak', '-a', '200', '-v', 'mb-us1', '-s', str(random.choice(velocities)), '-p', str(random.choice(tones)), str(texto)])
+  subprocess.check_output(['setsid', '-w', './voz_de_glados.sh', str(texto)])
 
 def romualdo_says(texto):
   global inter_phrase_callback   

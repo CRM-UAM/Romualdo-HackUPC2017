@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 
 import time
 import random
@@ -27,80 +28,82 @@ def ask_question(question, ignore_silence=False):
         if len(question) > 0: romualdo_says(question)
         text = recognize_speech()
         if not ignore_silence and text == "ERROR NO SPEECH DETECTED":
-            say(["I couldn't hear you.","Can't hear a thing","It's too loud here","I cannot hear you."])
+            say(["No te oigo.","No oigo nada!","Hay mucho ruido","No puedo oirte."])
             if i > 1: return None
-            say(["Please say again","Please talk louder","Please come closer, tell me","Tell me"])
+            say(["Repite, por favor","Por favor acercate al micrófono","Habla mas alto, por favor. Dime","Dime"])
             continue
         if text == "ERROR CANNOT CONNECT":
-            say(["I'm afraid that WiFi is not working and I couldn't hear you.","Sorry, I've lost my internet connection and could not process your beautiful speech."])
-            say(["The wonders of cloud computing! Ha ha.","We thought it was a good idea to use a cloud speech recognition software... what a fail!"])
+            say(["No tengo internet y no puedo reconocer voz. Carita triste.","Lo siento, no funciona internet y no puedo reconocer tu preciosa voz."])
+            say(["La magia de la nube! Ja ja ja","Es tremendo cuando falla la nube. jejeje"])
             if i > 1: return None
-            say(["So","Tell me again","Let's try again","Ok, so"])
+            say(["Entonces","Repitemelo","Volvamos a intentarlo","Okey, entonces"])
             continue
         break
     if text == "ERROR NO SPEECH DETECTED" or text == "ERROR CANNOT CONNECT": return None
-    print("Answer: "+str(text))
-    if not ignore_silence: say(["I see.","Ok.","Oh.","Cool.","Sweet."])
+    print("RESPUESTA RECONOCIDA: "+str(text))
+    if not ignore_silence: say(["Ya veo.","Okey.","Oh.","Bien.","Interesante."])
     return text
 
 
 
-romualdo_says("Hello!")
+romualdo_says("Hola hola!")
 
-wave_hand()
+#wave_hand()
 
-romualdo_says("My name is Romualdo, I'm a robot entertainer that lives on a pizza box!")
+romualdo_says("Me llamo Oshwaldo, soy un bot que adora el software libre y los sapoconchos")
 
 
 
-reply = ask_question("What is your name?")
+reply = ask_question("Como te llamas?")
 if reply:
     reply = reply.split()
     name = reply[-1]
-    name = name[:-1]
-    say(["Nice to meet you "+name+"!","Cool name "+name+"!","That's a sweet name "+name+"!","Hey there "+name+"!",name+" Interesting name!",name+" is a breautiful name"])
+    #name = name[:-1]
+    say(["Encantado de conocerte "+name+"!","Es un nombre muy bonito "+name+"!","Que nombre tan chulo "+name+"!","Hola "+name+"!","Oh! "+name+" que nombre tan interesante!",name+" es un nombre precioso"])
 
-
-reply = ask_question("How old are you?")
+age_aux=0
+reply = ask_question("Cuantos anios tienes?")
 if reply:
     reply = reply.split()
-    age = reply[-1]
-    say(["I'm afraid you're too old for me.","Already? Happy late birthday then!","You look much younger than "+age,"Wow you still look pretty good to be "+age])
-
-
-time.sleep(2)
-
-say(["So.","Well.","Hmm","Are you single?","Actually, I woudn't mind a date with you"])
-
-
-
-
-
-reply = ask_question("Would you go on a date with me?")
-if reply:
-    reply = reply.split()
-    answer = reply[0]
-    if answer[-1] == ".": answer = answer[:-1]
-    answer = answer.lower()
-    if answer == "no":
-        say(["Oh","Ouch","Ok.","You've broken my heart","My heart is broken now"])
+    age = reply[0]
+    age_aux = int(age)
+    if age_aux > 18:
+        say(["Oh vaya, no esta mal. Pero conozco sapoconchos mas viejos"])
+        #say(["Me temo que eres muy mayor para mi.","Tan pronto? Feliz cumpleaños, con retraso!","Pareces mucho mas joven que "+age+" anios","Guau! Todavia tienes buen aspecto para tener "+age])
     else:
-        say(["Oh my god.","Yes!","OMG","Sweet!"])
-        say(["I knew you'd say yes.","Thank you.","Nobody ever dates me.","Nobody ever says yes."])
-        say(["I'll make sure to bring pizza for our date.","Want a slice from my pizza box? Hahaha"])
+        say(["Oh vaya! Quieres ser mi amigo?", "El otro dia conoci a alguien de tu edad, me robó las tuercas"])
+
+#time.sleep(2)
+
+if age_aux >= 18:
+    say(["Hum.","Bueno.","Hum hum hum.","Eres soltero?","De hecho, no me importaria tener una cita contigo"])
+    reply = ask_question("Tendrias una cita conmigo? Puedes venir con pareja soy de mente abierta")
+    if reply:
+        reply = reply.split()
+        answer = reply[0]
+        if answer[-1] == ".": answer = answer[:-1]
+        answer = answer.lower()
+        if answer == "no":
+            say(["Oh","Ouch","Okey.","Me rompes el corazon","Me has roto el corazon"])
+        else:
+            say(["Guau.","Si!","OMaiGod!","Que guay!"])
+            say(["Sabia que dirias si.","Gracias.","Nunca nadie quiere tener una cita conmigo.","Nadie me habia dicho que si."])
+            say(["Me asegurare de llevar pixsa a nuestra cita.","Voy encargando el menu de fiesta."])
     
 
 
-say(["So.","Well.","Hmm","Are you single?","Actually, I woudn't mind a date with you","Would you go on a date with me? I'll bring pizza."])
+#say(["Hum.","Bueno.","Hum, hum, hum.","Eres soltero o soltera?","De hecho, no me importaria tener una cita contigo"])
 
+#say(["UN momento! Me estan jackeando, me estan jackeando! Ah no, solo eran gases. Continuemos"])
 
 n = 0
 while(True):
-    say(["Say something.","What do you think of the weather?","So how are you?","You look beautiful today","Where are you from?","Do you believe in love after love?","I like chicken","I want to hear your beautiful voice again","Who lives in a pineapple under the sea?","Help me, I'm bored!","I ran out of words for you","Sorry I don't talk, you are too beautiful","Want a slice from my pizza box? Hahaha"])
+    say(["Dime algo.","Que opinas del tiempo?","Y que tal estas?","Hoy estas estupenda","Hoy estas especialmente guapa","De que ciudad eres?","Crees en el amor?","Me gusta el pollo frito", "Quien vive en la pinia debajo del mar?","Dime algo, estoy aburrido!","Me he quedado sin palabras","Perdona que no te hable, es que eres tan guapa"])
     text = ask_question("",ignore_silence=True)
     if text is not None:
         #reply = dialogflow.text_request(text)
-        reply = cw.say(text)
+        #reply = cw.say(text)
+	reply = text ########### respondemos lo mismo que nos han dicho
         print(reply)
         reply = str(reply)
         romualdo_says(reply)
@@ -108,7 +111,7 @@ while(True):
     if n > 2: break
 
 
-say(["This is the end of the demo! Thanks for playing. Enjoy some nice music!"])
-webbrowser.open("http://www.youtube.com/watch?v=dQw4w9WgXcQ")
+say(["Has llegado al final de la demo! Gracias por participar! Aqui tienes un poco de música!"])
+#webbrowser.open("http://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
 
